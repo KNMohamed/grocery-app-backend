@@ -8,13 +8,12 @@ class ItemStatus(Enum):
 
 class GroceryItem:
     def __init__(self, name: str, quantity: int = 1):
-        self.id: Optional[int] = None
         self.name = name
         self.quantity = quantity
         self.status = ItemStatus.PENDING
+        self.purchased_at: Optional[datetime] = None
         self.created_at: datetime = datetime.now()
         self.updated_at: datetime = datetime.now()
-        self.purchased_at: Optional[datetime] = None
         
     def mark_as_purchased(self):
         self.status = ItemStatus.PURCHASED
@@ -33,16 +32,26 @@ class GroceryItem:
             self.quantity = quantity
         self.updated_at = datetime.now()
         
-# class GroceryList:
-#     def __init__(self, name: str):
-#         self.name = name
-#         self.items: List[GroceryItem] = []
-#         self.created_at: datetime = datetime.now()
-#         self.updated_at: datetime = datetime.now()
+class GroceryList:
+    def __init__(self, name: str):
+        self.name = name
+        self.created_at: datetime = datetime.now()
+        self.updated_at: datetime = datetime.now()
         
-#     def add_item(self, item: GroceryItem) -> GroceryItem:
-#         self.items.append(item)
-#         self.updated_at = datetime.now()
-#         return item
+    def add_item(self, item: GroceryItem) -> GroceryItem:
+        self.grocery_items.append(item)
+        self.updated_at = datetime.now()
+        return item
     
-#     self.remove_item(self, item:G)
+    def remove_item(self, item_id: int):
+        """ Remove grocery item by a given id """
+        item_to_remove = next((item for item in self.grocery_items if item.id == item_id), None)
+        if item_to_remove:
+            self.grocery_items.remove(item_to_remove)
+            self.updated_at = datetime.now()
+    
+    def get_pending_items(self) -> List[GroceryItem]:
+        return [item for item in self.grocery_items if item.status == ItemStatus.PENDING]
+    
+    def get_purchased_items(self) -> List[GroceryItem]:
+        return [item for item in self.grocery_items if item.status == ItemStatus.PURCHASED]
