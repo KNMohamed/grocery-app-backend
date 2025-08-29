@@ -52,9 +52,11 @@ class GroceryItemService:
         self,
         grocery_item_repo: AbstractRepository[GroceryItem],
         grocery_list_repo: AbstractRepository[GroceryList],
+        session: Session,
     ):
         self.grocery_item_repo = grocery_item_repo
         self.grocery_list_repo = grocery_list_repo
+        self.session = session
 
     def add_item_to_list(
         self, list_id: int, name: str, quantity: int = 1
