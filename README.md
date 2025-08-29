@@ -109,6 +109,11 @@ uv run flask run
 Run the test suite using pytest:
 
 ```bash
+# Install dependencies and create virtual environment
+uv sync
+
+# Activate the virtual environment
+source .venv/bin/activate  
 # Run all tests
 pytest
 
