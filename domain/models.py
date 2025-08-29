@@ -1,6 +1,6 @@
 from enum import Enum
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 class ItemStatus(Enum):
     PENDING = "pending"
@@ -8,6 +8,7 @@ class ItemStatus(Enum):
 
 class GroceryItem:
     def __init__(self, name: str, quantity: int = 1):
+        self.id: Optional[int] = None
         self.name = name
         self.quantity = quantity
         self.status = ItemStatus.PENDING
@@ -31,3 +32,17 @@ class GroceryItem:
         if quantity is not None:
             self.quantity = quantity
         self.updated_at = datetime.now()
+        
+# class GroceryList:
+#     def __init__(self, name: str):
+#         self.name = name
+#         self.items: List[GroceryItem] = []
+#         self.created_at: datetime = datetime.now()
+#         self.updated_at: datetime = datetime.now()
+        
+#     def add_item(self, item: GroceryItem) -> GroceryItem:
+#         self.items.append(item)
+#         self.updated_at = datetime.now()
+#         return item
+    
+#     self.remove_item(self, item:G)

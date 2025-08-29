@@ -1,6 +1,10 @@
 from flask import Flask
-import config
 
+import config
+import orm
+
+
+orm.start_mappers()
 app = Flask(__name__)
 
 
