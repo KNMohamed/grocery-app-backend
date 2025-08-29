@@ -1,7 +1,7 @@
 from flask import Flask
 from adapters.orm import start_mappers
 
-import config
+# import config
 
 
 start_mappers()
