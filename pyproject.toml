@@ -1,0 +1,17 @@
+[project]
+name = "grocery-app-backend"
+version = "0.1.0"
+description = "Grocery app backend"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flask>=3.1.2",
+    "flask-migrate>=4.1.0",
+    "ruff>=0.12.11",
+    "sqlalchemy>=2.0.43",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+]
