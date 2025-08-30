@@ -2,6 +2,7 @@ from typing import TypeVar, Generic, List, Optional, Type
 from abc import abstractmethod, ABC
 from sqlalchemy.orm import Session
 
+
 T = TypeVar("T")
 
 
@@ -34,8 +35,8 @@ class AbstractRepository(ABC, Generic[T]):
         ...
 
 
-class BaseSqlAlchemyRepository(AbstractRepository[T]):
-    """Base SQLAlchemy repository implementation."""
+class SqlAlchemyRepository(AbstractRepository[T]):
+    """SQLAlchemy repository implementation."""
 
     def __init__(self, session: Session, model_class: Type[T]):
         self.session = session
