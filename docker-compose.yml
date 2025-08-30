@@ -2,14 +2,15 @@ services:
   db:
     image: postgres:15
     environment:
-      POSTGRES_USER: postgres
+      POSTGRES_DB: grocery
+      POSTGRES_USER: myuser
       POSTGRES_PASSWORD: abc123
     ports:
       - "54321:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U myuser -d grocery"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -21,8 +22,10 @@ services:
     ports:
       - "5001:5000"
     environment:
-      DB_HOST: postgres
+      DB_HOST: db
+      DB_USER: myuser
       DB_PASSWORD: abc123
+      DB_NAME: grocery
     volumes:
       - .:/app # Mount the current directory into the container
     depends_on:
