@@ -31,22 +31,19 @@ This project follows clean architecture principles using the **Service Layer Pat
 ├── domain/
 │   ├── __init__.py
 │   ├── models.py      # Domain entities
-|   └── exceptions.py  # Domain layer exceptions (TODO)
 ├── service_layer/
 │   ├── __init__.py
 │   ├── services.py    # Business logic
-│   └── unit_of_work.py # Transaction management (TODO)
 ├── entrypoints/
 │   ├── __init__.py
 │   ├── flask_app.py   # Flask application and routes
-│   └── schemas.py     # Request/response schemas (TODO)
 ├── tests/             # Test suite
 │   ├── __init__.py
 │   ├── unit/          # Unit tests for domain logic
 │   ├── integration/   # Integration tests for adapters
 │   └── e2e/          # End-to-end API tests
 ├── config.py          # Application configuration
-└── requirements.txt   # Python dependencies
+├── ...
 ```
 
 **Repository Pattern (`adapters/`)**
