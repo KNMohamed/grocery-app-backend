@@ -54,23 +54,10 @@ class FakeGroceryListRepository(AbstractRepository[GroceryList]):
 # TODO: FakeGroceryItemRepository
 
 
-class FakeSession:
-    """Mock session for testing that doesn't actually commit or rollback."""
-
-    committed = False
-    rollbacked = False
-
-    def commit(self):
-        self.committed = True
-
-    def rollback(self):
-        self.rollbacked = True
-
-
 # Test cases for GroceryListService
 def test_create_grocery_list():
-    repo, session = FakeGroceryListRepository(), FakeSession()
-    grocery_list_service = GroceryListService(repo, session)
+    repo = FakeGroceryListRepository()
+    grocery_list_service = GroceryListService(repo)
 
     grocery_list = grocery_list_service.create_grocery_list(
         "Test Shopping List"
@@ -83,8 +70,8 @@ def test_create_grocery_list():
 
 def test_get_grocery_list():
     """Test retrieving a grocery list by ID."""
-    repo, session = FakeGroceryListRepository(), FakeSession()
-    grocery_list_service = GroceryListService(repo, session)
+    repo = FakeGroceryListRepository()
+    grocery_list_service = GroceryListService(repo)
 
     # Create a grocery list first
     grocery_list = grocery_list_service.create_grocery_list(
@@ -101,8 +88,8 @@ def test_get_grocery_list():
 
 def test_get_all_grocery_lists():
     """Test retrieving all grocery lists."""
-    repo, session = FakeGroceryListRepository(), FakeSession()
-    grocery_list_service = GroceryListService(repo, session)
+    repo = FakeGroceryListRepository()
+    grocery_list_service = GroceryListService(repo)
 
     # Create multiple lists
     grocery_list1 = grocery_list_service.create_grocery_list(
@@ -123,8 +110,8 @@ def test_get_all_grocery_lists():
 
 def test_delete_grocery_list():
     """Test deleting a grocery list."""
-    repo, session = FakeGroceryListRepository(), FakeSession()
-    grocery_list_service = GroceryListService(repo, session)
+    repo = FakeGroceryListRepository()
+    grocery_list_service = GroceryListService(repo)
 
     # Create a grocery list first
     grocery_list = grocery_list_service.create_grocery_list(
