@@ -26,9 +26,18 @@ COPY . .
 # Install the project itself
 RUN uv sync --frozen --no-dev
 
+# Copy entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+
+# Make entrypoint executable
+RUN chmod +x /entrypoint.sh
+
 # Set environment variables for Flask
 ENV FLASK_APP=entrypoints/flask_app.py
 EXPOSE 5000
+
+# Run the Flask migrations and application using uv entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]
 
 # Run the Flask application using uv
 CMD ["uv", "run", "flask", "run", "--host=0.0.0.0", "--port=5000"]
