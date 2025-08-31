@@ -2,10 +2,9 @@
 
 A RESTful API backend for the RideCo Grocery List application
 
-## Features
+## Overview
 
-- Family grocery list management
-- RESTful API endpoints for creating and editing grocery lists
+- Grocery list management for a family of 1
 - Comprehensive test coverage
 
 ## Tech Stack

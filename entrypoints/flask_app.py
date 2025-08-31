@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from adapters.orm import start_mappers, metadata
 from adapters.repository import SqlAlchemyRepository
 from service_layer.services import GroceryListService, GroceryItemService
@@ -10,6 +11,10 @@ import config
 
 
 app = Flask(__name__)
+
+# Enable CORS for all routes
+# For production use more specific origin
+CORS(app)
 
 # Configure Flask to redirect trailing slashes
 app.url_map.strict_slashes = False
