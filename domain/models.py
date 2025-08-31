@@ -96,4 +96,5 @@ class GroceryList:
             "name": self.name,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
+            "grocery_items": [item.to_dict() for item in getattr(self, "grocery_items", [])],
         }
