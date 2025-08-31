@@ -32,7 +32,9 @@ class GroceryListService:
         """Get all grocery lists."""
         return self.grocery_list_repo.get_all()
 
-    def update_grocery_list(self, list_id: int, name: str) -> Optional[GroceryList]:
+    def update_grocery_list(
+        self, list_id: int, name: str
+    ) -> Optional[GroceryList]:
         """Update a grocery list's name."""
         grocery_list = self.grocery_list_repo.get_by_id(list_id)
         if grocery_list:
@@ -47,7 +49,7 @@ class GroceryListService:
         grocery_list = self.grocery_list_repo.get_by_id(list_id)
         if not grocery_list:
             return False
-        
+
         # Access the session from the repository
         session = self.grocery_list_repo.session
         # Delete the object through the session to trigger ORM cascade
@@ -126,19 +128,7 @@ class GroceryItemService:
 
     def delete_item(self, item_id: int) -> bool:
         """Delete a grocery item."""
-        # First get the item to find its grocery list
-        item = self.get_item(item_id)
-        if not item:
-            return False
-
-        # Get the grocery list that contains this item
-        grocery_list = item.grocery_list
-        if grocery_list:
-            # Use the domain model's remove_item method
-            grocery_list.remove_item(item_id)
-            # Update the grocery list to persist the change
-            self.grocery_list_repo.update(grocery_list)
-
-        # Delete the item from the repository
+        # Simply delete the item from the repository
+        # The database foreign key relationship will handle the consistency
         is_deleted = self.grocery_item_repo.delete_by_id(item_id)
         return is_deleted

@@ -66,9 +66,9 @@ def start_mappers():
         grocery_lists,
         properties={
             "grocery_items": relationship(
-                models.GroceryItem, 
+                models.GroceryItem,
                 back_populates="grocery_list",
-                cascade="all, delete-orphan"
+                cascade="all, delete-orphan",
             )
         },
     )

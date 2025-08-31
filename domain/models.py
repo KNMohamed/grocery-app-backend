@@ -43,7 +43,9 @@ class GroceryItem:
             "name": self.name,
             "quantity": self.quantity,
             "is_purchased": self.status == ItemStatus.PURCHASED,
-            "purchased_at": self.purchased_at.isoformat() if self.purchased_at else None,
+            "purchased_at": self.purchased_at.isoformat()
+            if self.purchased_at
+            else None,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }
@@ -96,5 +98,7 @@ class GroceryList:
             "name": self.name,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
-            "grocery_items": [item.to_dict() for item in getattr(self, "grocery_items", [])],
+            "grocery_items": [
+                item.to_dict() for item in getattr(self, "grocery_items", [])
+            ],
         }
