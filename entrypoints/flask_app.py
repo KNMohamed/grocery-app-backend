@@ -48,7 +48,6 @@ def get_grocery_lists():
         ), 200
 
     except Exception as e:
-        db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
 
@@ -67,7 +66,6 @@ def get_grocery_list(list_id):
         return jsonify(grocery_list.to_dict()), 200
 
     except Exception as e:
-        db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
 
@@ -176,7 +174,6 @@ def get_items_by_list(list_id):
         return jsonify([item.to_dict() for item in items]), 200
 
     except Exception as e:
-        db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
 
