@@ -213,3 +213,113 @@ def add_item_to_list(list_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+
+@app.route("/api/v1/grocery-items/<int:item_id>", methods=["PATCH"])
+def update_grocery_item(item_id):
+    """Update a grocery item's name and/or quantity."""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "Request body is required"}), 400
+
+        # Extract optional fields
+        name = data.get("name")
+        quantity = data.get("quantity")
+
+        # Validate name if provided
+        if name is not None:
+            name = name.strip()
+            if not name:
+                return jsonify({"error": "Name cannot be empty"}), 400
+
+        # Validate quantity if provided
+        if quantity is not None:
+            if not isinstance(quantity, int) or quantity < 1:
+                return jsonify(
+                    {"error": "Quantity must be a positive integer"}
+                ), 400
+
+        # At least one field must be provided
+        if name is None and quantity is None:
+            return jsonify(
+                {"error": "At least one field (name or quantity) must be provided"}
+            ), 400
+
+        # Create repositories
+        grocery_list_repo = SqlAlchemyRepository(db.session, GroceryList)
+        grocery_item_repo = SqlAlchemyRepository(db.session, GroceryItem)
+
+        # Create service
+        service = GroceryItemService(
+            grocery_item_repo, grocery_list_repo, db.session
+        )
+
+        # Update the item
+        updated_item = service.update_item(item_id, name=name, quantity=quantity)
+
+        if not updated_item:
+            return jsonify({"error": "Grocery item not found"}), 404
+
+        db.session.commit()
+
+        return jsonify(updated_item.to_dict()), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    
+
+@app.route("/api/v1/grocery-items/<int:item_id>/purchase", methods=["POST"])
+def mark_item_as_purchased(item_id):
+    """Mark a grocery item as purchased."""
+    try:
+        # Create repositories
+        grocery_list_repo = SqlAlchemyRepository(db.session, GroceryList)
+        grocery_item_repo = SqlAlchemyRepository(db.session, GroceryItem)
+
+        # Create service
+        service = GroceryItemService(
+            grocery_item_repo, grocery_list_repo, db.session
+        )
+
+        # Mark item as purchased
+        updated_item = service.mark_item_as_purchased(item_id)
+
+        if not updated_item:
+            return jsonify({"error": "Grocery item not found"}), 404
+
+        db.session.commit()
+
+        return jsonify(updated_item.to_dict()), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/v1/grocery-items/<int:item_id>/unpurchase", methods=["POST"])
+def mark_item_as_pending(item_id):
+    """Mark a grocery item as pending (not purchased)."""
+    try:
+        # Create repositories
+        grocery_list_repo = SqlAlchemyRepository(db.session, GroceryList)
+        grocery_item_repo = SqlAlchemyRepository(db.session, GroceryItem)
+
+        # Create service
+        service = GroceryItemService(
+            grocery_item_repo, grocery_list_repo, db.session
+        )
+
+        # Mark item as pending
+        updated_item = service.mark_item_as_pending(item_id)
+
+        if not updated_item:
+            return jsonify({"error": "Grocery item not found"}), 404
+
+        db.session.commit()
+
+        return jsonify(updated_item.to_dict()), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
