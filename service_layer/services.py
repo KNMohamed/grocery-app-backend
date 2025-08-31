@@ -43,8 +43,16 @@ class GroceryListService:
 
     def delete_grocery_list(self, list_id: int) -> bool:
         """Delete a grocery list (cascade will automatically delete all items)."""
-        is_deleted = self.grocery_list_repo.delete_by_id(list_id)
-        return is_deleted
+        # Get the grocery list object first to enable cascade
+        grocery_list = self.grocery_list_repo.get_by_id(list_id)
+        if not grocery_list:
+            return False
+        
+        # Access the session from the repository
+        session = self.grocery_list_repo.session
+        # Delete the object through the session to trigger ORM cascade
+        session.delete(grocery_list)
+        return True
 
 
 class GroceryItemService:
