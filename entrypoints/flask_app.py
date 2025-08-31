@@ -98,7 +98,6 @@ def delete_grocery_list(list_id):
     """Delete a grocery list by ID."""
     try:
         grocery_list_repo = SqlAlchemyRepository(db.session, GroceryList)
-        grocery_item_repo = SqlAlchemyRepository(db.session, GroceryItem)
         service = GroceryListService(grocery_list_repo)
 
         # Check if the grocery list exists first
@@ -106,8 +105,8 @@ def delete_grocery_list(list_id):
         if not grocery_list:
             return jsonify({"error": "Grocery list not found"}), 404
 
-        # Delete the grocery list and all its items
-        is_deleted = service.delete_grocery_list(list_id, grocery_item_repo)
+        # Delete the grocery list (cascade will automatically delete all items)
+        is_deleted = service.delete_grocery_list(list_id)
 
         if is_deleted:
             db.session.commit()

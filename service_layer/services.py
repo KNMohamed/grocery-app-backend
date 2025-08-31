@@ -41,19 +41,8 @@ class GroceryListService:
             return updated_list
         return None
 
-    def delete_grocery_list(self, list_id: int, grocery_item_repo: AbstractRepository[GroceryItem] = None) -> bool:
-        """Delete a grocery list and all its items."""
-        # Get the grocery list first
-        grocery_list = self.grocery_list_repo.get_by_id(list_id)
-        if not grocery_list:
-            return False
-        
-        # If grocery_item_repo is provided, delete all items first
-        if grocery_item_repo and hasattr(grocery_list, 'grocery_items'):
-            for item in grocery_list.grocery_items[:]:  # Create a copy to avoid modification during iteration
-                grocery_item_repo.delete_by_id(item.id)
-        
-        # Now delete the grocery list
+    def delete_grocery_list(self, list_id: int) -> bool:
+        """Delete a grocery list (cascade will automatically delete all items)."""
         is_deleted = self.grocery_list_repo.delete_by_id(list_id)
         return is_deleted
 
