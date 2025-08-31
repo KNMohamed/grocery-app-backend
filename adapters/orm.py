@@ -12,6 +12,7 @@ from sqlalchemy.orm import registry, relationship
 from sqlalchemy.sql import func
 
 from domain import models
+from domain.models import ItemStatus
 
 metadata = MetaData()
 mapper_registry = registry()
@@ -22,7 +23,7 @@ grocery_items = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("name", String(255)),
     Column("quantity", Integer, nullable=False),
-    Column("status", Enum("pending", "purchased", name="item_status")),
+    Column("status", Enum(ItemStatus, name="item_status")),
     Column("grocery_list_id", Integer, ForeignKey("grocery_lists.id")),
     Column("purchased_at", DateTime(timezone=True), nullable=True),
     Column("created_at", DateTime(timezone=True), server_default=func.now()),

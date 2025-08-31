@@ -1,8 +1,8 @@
 """Create grocery_lists and grocery_items tables
 
-Revision ID: a371f789a065
+Revision ID: f879a92970d9
 Revises:
-Create Date: 2025-08-30 20:34:39.723494
+Create Date: 2025-08-31 00:16:20.562553
 
 """
 
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "a371f789a065"
+revision = "f879a92970d9"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -44,7 +44,7 @@ def upgrade():
         sa.Column("quantity", sa.Integer(), nullable=False),
         sa.Column(
             "status",
-            sa.Enum("pending", "purchased", name="item_status"),
+            sa.Enum("PENDING", "PURCHASED", name="item_status"),
             nullable=True,
         ),
         sa.Column("grocery_list_id", sa.Integer(), nullable=True),
