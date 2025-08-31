@@ -38,17 +38,7 @@ def get_grocery_lists():
 
         grocery_lists = service.get_all_grocery_lists()
 
-        return jsonify(
-            [
-                {
-                    "id": grocery_list.id,
-                    "name": grocery_list.name,
-                    "created_at": grocery_list.created_at.isoformat(),
-                    "updated_at": grocery_list.updated_at.isoformat(),
-                }
-                for grocery_list in grocery_lists
-            ]
-        ), 200
+        return jsonify([grocery_list.to_dict() for grocery_list in grocery_lists]), 200
 
     except Exception as e:
         db.session.rollback()
@@ -67,14 +57,7 @@ def get_grocery_list(list_id):
         if not grocery_list:
             return jsonify({"error": "Grocery list not found"}), 404
 
-        return jsonify(
-            {
-                "id": grocery_list.id,
-                "name": grocery_list.name,
-                "created_at": grocery_list.created_at.isoformat(),
-                "updated_at": grocery_list.updated_at.isoformat(),
-            }
-        ), 200
+        return jsonify(grocery_list.to_dict()), 200
 
     except Exception as e:
         db.session.rollback()
@@ -103,14 +86,7 @@ def update_grocery_list(list_id):
 
         db.session.commit()
 
-        return jsonify(
-            {
-                "id": updated_list.id,
-                "name": updated_list.name,
-                "created_at": updated_list.created_at.isoformat(),
-                "updated_at": updated_list.updated_at.isoformat(),
-            }
-        ), 200
+        return jsonify(updated_list.to_dict()), 200
 
     except Exception as e:
         db.session.rollback()
@@ -122,6 +98,7 @@ def delete_grocery_list(list_id):
     """Delete a grocery list by ID."""
     try:
         grocery_list_repo = SqlAlchemyRepository(db.session, GroceryList)
+        grocery_item_repo = SqlAlchemyRepository(db.session, GroceryItem)
         service = GroceryListService(grocery_list_repo)
 
         # Check if the grocery list exists first
@@ -129,8 +106,8 @@ def delete_grocery_list(list_id):
         if not grocery_list:
             return jsonify({"error": "Grocery list not found"}), 404
 
-        # Delete the grocery list
-        is_deleted = service.delete_grocery_list(list_id)
+        # Delete the grocery list and all its items
+        is_deleted = service.delete_grocery_list(list_id, grocery_item_repo)
 
         if is_deleted:
             db.session.commit()
@@ -164,14 +141,33 @@ def create_grocery_list():
         grocery_list = service.create_grocery_list(name)
         db.session.commit()
 
-        return jsonify(
-            {
-                "id": grocery_list.id,
-                "name": grocery_list.name,
-                "created_at": grocery_list.created_at.isoformat(),
-                "updated_at": grocery_list.updated_at.isoformat(),
-            }
-        ), 201
+        return jsonify(grocery_list.to_dict()), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/v1/grocery-lists/<int:list_id>/items", methods=["GET"])
+def get_items_by_list(list_id):
+    """Get all items for a specific grocery list."""
+    try:
+        # Create repositories
+        grocery_list_repo = SqlAlchemyRepository(db.session, GroceryList)
+        grocery_item_repo = SqlAlchemyRepository(db.session, GroceryItem)
+
+        # Create service
+        service = GroceryItemService(
+            grocery_item_repo, grocery_list_repo, db.session
+        )
+
+        # Get items for the list
+        items = service.get_items_by_list(list_id)
+
+        if items is None:
+            return jsonify({"error": "Grocery list not found"}), 404
+
+        return jsonify([item.to_dict() for item in items]), 200
 
     except Exception as e:
         db.session.rollback()
@@ -213,16 +209,7 @@ def add_item_to_list(list_id):
 
         db.session.commit()
 
-        return jsonify(
-            {
-                "id": item.id,
-                "name": item.name,
-                "quantity": item.quantity,
-                "is_purchased": item.status == ItemStatus.PURCHASED,
-                "created_at": item.created_at.isoformat(),
-                "updated_at": item.updated_at.isoformat(),
-            }
-        ), 201
+        return jsonify(item.to_dict()), 201
 
     except Exception as e:
         db.session.rollback()

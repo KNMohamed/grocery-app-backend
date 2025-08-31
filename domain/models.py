@@ -36,6 +36,18 @@ class GroceryItem:
             self.quantity = quantity
         self.updated_at = datetime.now()
 
+    def to_dict(self) -> dict:
+        """Convert GroceryItem to dictionary for JSON serialization."""
+        return {
+            "id": getattr(self, "id", None),
+            "name": self.name,
+            "quantity": self.quantity,
+            "is_purchased": self.status == ItemStatus.PURCHASED,
+            "purchased_at": self.purchased_at.isoformat() if self.purchased_at else None,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+        }
+
 
 class GroceryList:
     def __init__(self, name: str):
@@ -76,3 +88,12 @@ class GroceryList:
         if name is not None:
             self.name = name
         self.updated_at = datetime.now()
+
+    def to_dict(self) -> dict:
+        """Convert GroceryList to dictionary for JSON serialization."""
+        return {
+            "id": getattr(self, "id", None),
+            "name": self.name,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+        }
