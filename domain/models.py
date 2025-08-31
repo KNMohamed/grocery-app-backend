@@ -70,3 +70,9 @@ class GroceryList:
             for item in self.grocery_items
             if item.status == ItemStatus.PURCHASED
         ]
+
+    def update(self, name: Optional[str] = None):
+        """Update grocery list properties."""
+        if name is not None:
+            self.name = name
+        self.updated_at = datetime.now()

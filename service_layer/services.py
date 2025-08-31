@@ -32,6 +32,15 @@ class GroceryListService:
         """Get all grocery lists."""
         return self.grocery_list_repo.get_all()
 
+    def update_grocery_list(self, list_id: int, name: str) -> Optional[GroceryList]:
+        """Update a grocery list's name."""
+        grocery_list = self.grocery_list_repo.get_by_id(list_id)
+        if grocery_list:
+            grocery_list.update(name=name)
+            updated_list = self.grocery_list_repo.update(grocery_list)
+            return updated_list
+        return None
+
     def delete_grocery_list(self, list_id: int) -> bool:
         """Delete a grocery list."""
         is_deleted = self.grocery_list_repo.delete_by_id(list_id)

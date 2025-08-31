@@ -81,6 +81,42 @@ def get_grocery_list(list_id):
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/api/v1/grocery-lists/<int:list_id>", methods=["PUT"])
+def update_grocery_list(list_id):
+    """Update a grocery list's name."""
+    try:
+        data = request.get_json()
+        if not data or "name" not in data:
+            return jsonify({"error": "Name is required"}), 400
+
+        name = data["name"].strip()
+        if not name:
+            return jsonify({"error": "Name cannot be empty"}), 400
+
+        grocery_list_repo = SqlAlchemyRepository(db.session, GroceryList)
+        service = GroceryListService(grocery_list_repo)
+
+        updated_list = service.update_grocery_list(list_id, name)
+
+        if not updated_list:
+            return jsonify({"error": "Grocery list not found"}), 404
+
+        db.session.commit()
+
+        return jsonify(
+            {
+                "id": updated_list.id,
+                "name": updated_list.name,
+                "created_at": updated_list.created_at.isoformat(),
+                "updated_at": updated_list.updated_at.isoformat(),
+            }
+        ), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/api/v1/grocery-lists/<int:list_id>", methods=["DELETE"])
 def delete_grocery_list(list_id):
     """Delete a grocery list by ID."""
