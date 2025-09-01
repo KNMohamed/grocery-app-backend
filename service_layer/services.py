@@ -87,12 +87,15 @@ class GroceryItemService:
         """Get a grocery item by ID."""
         return self.grocery_item_repo.get_by_id(item_id)
 
-    def get_items_by_list(self, list_id: int) -> Optional[List[GroceryItem]]:
-        """Get all grocery items for a specific grocery list."""
+    def get_items_by_list(self, list_id: int) -> Optional[dict]:
+        """Get all grocery items for a specific grocery list along with the list name."""
         grocery_list = self.grocery_list_repo.get_by_id(list_id)
         if not grocery_list:
             return None
-        return grocery_list.grocery_items
+        return {
+            "grocery_list_name": grocery_list.name,
+            "items": grocery_list.grocery_items
+        }
 
     def update_item(
         self,

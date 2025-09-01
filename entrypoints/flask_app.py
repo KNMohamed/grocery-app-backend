@@ -165,13 +165,18 @@ def get_items_by_list(list_id):
             grocery_item_repo, grocery_list_repo, db.session
         )
 
-        # Get items for the list
-        items = service.get_items_by_list(list_id)
+        # Get items and list name
+        result = service.get_items_by_list(list_id)
 
-        if items is None:
+        if result is None:
             return jsonify({"error": "Grocery list not found"}), 404
 
-        return jsonify([item.to_dict() for item in items]), 200
+        response_data = {
+            "grocery_list_name": result["grocery_list_name"],
+            "items": [item.to_dict() for item in result["items"]]
+        }
+
+        return jsonify(response_data), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
