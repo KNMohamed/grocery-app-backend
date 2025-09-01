@@ -14,6 +14,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - grocery-shared-network
 
   app:
     build:
@@ -27,19 +29,18 @@ services:
       DB_PASSWORD: abc123
       DB_NAME: grocery
     volumes:
-      - .:/app # Mount the current directory into the container
+      - .:/app
     depends_on:
       db:
         condition: service_healthy
     restart: unless-stopped
-
-  adminer:
-    image: adminer
-    ports:
-      - "8080:8080"
-    depends_on:
-      db:
-        condition: service_healthy
+    networks:
+      - grocery-shared-network
 
 volumes:
   postgres_data:
+
+networks:
+  grocery-shared-network:
+    driver: bridge
+    name: grocery-shared-network
